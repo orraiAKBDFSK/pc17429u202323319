@@ -4,18 +4,39 @@
     <Toolbar />
     <h2>{{ $t("craftBreweries") }}</h2>
     <div class="breweries-container">
-      <!-- Aquí irán las tarjetas de cervecerías -->
+      <CraftBreweryCard v-for="brewery in breweries" :key="brewery.id" :brewery="brewery" />
     </div>
   </div>
 </template>
 
 <script>
-import Toolbar from './Toolbar.vue';  // Ruta al componente Toolbar
+import Toolbar from './Toolbar.vue';
+import CraftBreweryCard from './CraftBreweryCard.vue';  //
+import { fetchBreweries } from '../infrastructure/breweryService';
 
 export default {
   name: 'Home',
   components: {
-    Toolbar
+    Toolbar,
+    CraftBreweryCard
+  },
+  data() {
+    return {
+      breweries: []
+    };
+  },
+  mounted() {
+    this.fetchBreweries();
+  },
+  methods: {
+    async fetchBreweries() {
+      try {
+        const data = await fetchBreweries();
+        this.breweries = data;  // Asigna las cerveceras a la variable 'breweries'
+      } catch (error) {
+        console.error('Error fetching breweries:', error);
+      }
+    }
   }
 };
 </script>
